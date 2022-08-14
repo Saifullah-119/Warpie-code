@@ -36,6 +36,7 @@ class Warpie implements ActionListener
 	int min=0;
 	int pool[]={-6,-5,-4,-3,-3,-2,-2,-1,-1,-1,0,1,1,1,2,2,3,3,4,5,6};
 	int ar25[]={1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25};
+	String countString[]=new String[25];
 	int max=pool.length-1;
 	int meDice,compDice,myCount,compCount,myLoc,compLoc,lastMyLoc,lastCompLoc,nx,oldMyPlace,oldCompPlace,move;
 	boolean myArea[]=new boolean[25];
@@ -127,14 +128,10 @@ class Warpie implements ActionListener
 				myLoc-=meDice;
 				updSts.setText("Player can't move");
 			}
-			else if(myLoc==compLoc)
+			if(myLoc==compLoc)
 			{
 				updSts.setText("Player can't move");
 				myLoc-=meDice;	
-			}
-			else
-			{
-				myCount=myCount+1;
 			}
 			mySts.setText("You got:"+meDice+" & Location: "+myLoc);
 			compDice=pool[(int)Math.floor(Math.random()*(max-min+1)+min)];
@@ -144,14 +141,10 @@ class Warpie implements ActionListener
 				compLoc-=compDice;
 				updSts.setText("Computer can't move");
 			}
-			else if(compLoc==myLoc)
+			if(compLoc==myLoc)
 			{
 				updSts.setText("Computer can't move");
 				compLoc-=compDice;
-			}
-			else
-			{
-				compCount=compCount+1;
 			}
 			compSts.setText("Computer got:"+compDice+" & Location: "+compLoc);
 			for(int q=0;q<ar25.length;q++)
@@ -160,6 +153,7 @@ class Warpie implements ActionListener
 				if(nx==myLoc)
 				{	
 					lbl[q].setBackground(Color.decode("#fdf796"));
+					countString[q]="yellow";
 					break;
 				}
 			}
@@ -169,23 +163,30 @@ class Warpie implements ActionListener
 				if(nx==compLoc)
 				{	
 					lbl[q].setBackground(Color.decode("#fdc496"));
+					countString[q]="orange";
 					break;
 				}
 			}
 			if(move==45)
 			{
-				updSts.setText("Game Ended");
+				for(int q=0;q<countString.length;q++)
+				{
+					if(countString[q]=="yellow")
+						myCount=myCount+1;
+					if(countString[q]=="orange")
+						compCount=compCount+1;
+				}
 				roll.setText("Game Ended");
 				if(myCount>compCount)
 				{
-					mySts.setText("Player won, congrats!");
-					compSts.setText("Computer lost");
+					updSts.setText("Player won, congrats!");
 				}
 				if(compCount>myCount)
 				{
-					mySts.setText("Player lost, better luck next time!");
-					compSts.setText("Computer won");
+					updSts.setText("Player lost, better luck next time!");
 				}
+				mySts.setText("Player Area coverage: "+myCount);
+				compSts.setText("Computer Area coverage: "+compCount);
 			}
 			else
 				move=move+1;
